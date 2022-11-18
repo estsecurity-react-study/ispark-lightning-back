@@ -1,24 +1,37 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuthController } from './auth/auth.controller';
-import { AuthService } from './auth/auth.service';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import logger from './middleware/logger.middleware';
+import { AuthController } from './auth/auth.controller';
+import { RouterModule } from '@nestjs/core';
+
+import { UserModule } from './user/user.module';
+import setMysqlOption from './db/init';
 
 @Module({
   imports: [
+    // Config Modules
     ConfigModule.forRoot(),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.MYSQL_HOST,
-      port: Number(process.env.MYSQL_PORT),
-      username: process.env.MYSQL_USERNAME,
-      password: process.env.MYSQL_PASSWORD,
-      database: process.env.MYSQL_DATABASE,
-    }),
+    TypeOrmModule.forRoot(setMysqlOption()),
+    // Service Modules
+    AuthModule,
+    UserModule,
+    // Router
+    RouterModule.register([
+      {
+        path: 'api',
+        children: [UserModule],
+      },
+    ]),
   ],
-  controllers: [AppController, AuthController],
-  providers: [AppService, AuthService],
+  controllers: [AppController],
+  providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(logger).forRoutes(AuthController, UserModule);
+  }
+}
