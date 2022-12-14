@@ -6,18 +6,15 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   constructor(private userService: UserService) {}
 
-  getUserToken(): string {
-    return 'humanwater-test-token';
-  }
-
-  async validateUser(email: string, password: string): Promise<any> {
+  async validate(email: string, password: string): Promise<any> {
+    console.log(email, password);
     const user = await this.userService._findUserByEmail(email);
     if (!user)
       throw new HttpException('Invalid email', HttpStatus.UNAUTHORIZED);
     const isSamePw = await bcrypt.compare(password, user.password);
     if (!isSamePw)
       throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
-    const { password: savedPassword, ...result } = user;
+    const { password: _, ...result } = user;
     return result;
   }
 }

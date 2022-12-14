@@ -1,5 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UseGuards,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { UserEntity } from 'src/db/entity/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto';
@@ -25,6 +31,7 @@ export class UserService {
     return this.buildUserRO(saveResult);
   }
 
+  @UseGuards(LocalAuthGuard)
   async signin(user: LoginUserDto) {
     const { email, password } = user;
     try {

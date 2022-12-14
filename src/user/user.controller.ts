@@ -1,5 +1,8 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
+
+import { LocalAuthGuard } from 'src/auth/local-auth.guard';
+import { LocalStrategy } from 'src/auth/local.strategy';
 import { CreateUserDto, LoginUserDto } from './dto';
 import { CreateUserValidatePipe, LoginUserValidatePipe } from './pipe';
 import { UserService } from './user.service';
@@ -21,12 +24,14 @@ export class UserController {
     }
   }
 
+  @UseGuards(LocalAuthGuard)
   @Post('/signin')
   async userSignin(
     @Body(new LoginUserValidatePipe()) userData: LoginUserDto,
     @Res() res: Response,
   ) {
-    const result = await this.userService.signin(userData);
-    return res.status(200).json({ isError: false, result });
+    return res.status(200).json({ userData });
+    // const result = await this.userService.signin(userData);
+    // return res.status(200).json({ isError: false, result });
   }
 }
