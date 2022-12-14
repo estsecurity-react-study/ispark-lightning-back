@@ -12,7 +12,7 @@ import { IsEmail } from 'class-validator';
 import { InternalServerErrorException } from '@nestjs/common';
 
 //* Biological gender
-enum GenderType {
+export enum GenderType {
   MAN = 'm',
   WOMAN = 'w',
 }

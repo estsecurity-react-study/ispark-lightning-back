@@ -1,7 +1,7 @@
 import { Body, Controller, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
-import { CreateUserDto } from './dto';
-import { CreateUserValidatePipe } from './pipe/createUserValidate.pipe';
+import { CreateUserDto, LoginUserDto } from './dto';
+import { CreateUserValidatePipe, LoginUserValidatePipe } from './pipe';
 import { UserService } from './user.service';
 
 @Controller('')
@@ -19,5 +19,14 @@ export class UserController {
       console.log({ err }); // [log]
       return Promise.reject(err);
     }
+  }
+
+  @Post('/signin')
+  async userSignin(
+    @Body(new LoginUserValidatePipe()) userData: LoginUserDto,
+    @Res() res: Response,
+  ) {
+    const result = await this.userService.signin(userData);
+    return res.status(200).json({ isError: false, result });
   }
 }
