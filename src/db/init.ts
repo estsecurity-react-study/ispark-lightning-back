@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { User } from './entity/user.entity';
+import { UserEntity } from './entity/user.entity';
 
 const setMysqlOption = (): TypeOrmModuleOptions => {
   return {
@@ -9,8 +9,8 @@ const setMysqlOption = (): TypeOrmModuleOptions => {
     username: process.env.MYSQL_USERNAME,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
-    entities: [User],
-    // synchronize: true,
+    entities: [UserEntity],
+    synchronize: true,
   };
 };
 

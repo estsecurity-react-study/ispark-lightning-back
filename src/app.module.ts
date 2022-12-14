@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import logger from './middleware/logger.middleware';
 import { AuthController } from './auth/auth.controller';
+import { UserController } from './user/user.controller';
 import { RouterModule } from '@nestjs/core';
 
 import { UserModule } from './user/user.module';
@@ -16,9 +17,7 @@ import setMysqlOption from './db/init';
     // Config Modules
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot(setMysqlOption()),
-    // Service Modules
-    AuthModule,
-    UserModule,
+    // Business Modules
     // Router
     RouterModule.register([
       {
@@ -26,12 +25,14 @@ import setMysqlOption from './db/init';
         children: [UserModule],
       },
     ]),
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(logger).forRoutes(AuthController, UserModule);
+    consumer.apply(logger).forRoutes(AuthController, UserController);
   }
 }

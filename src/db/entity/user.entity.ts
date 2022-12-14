@@ -5,12 +5,22 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryColumn,
+  BeforeInsert,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { IsEmail } from 'class-validator';
+import { InternalServerErrorException } from '@nestjs/common';
 
-import { IsEmail, Matches } from 'class-validator';
+//* Biological gender
+enum GenderType {
+  MAN = 'm',
+  WOMAN = 'w',
+}
 
-@Entity()
-export class User {
+@Entity({
+  name: 'user',
+})
+export class UserEntity {
   @PrimaryColumn()
   @Generated('uuid')
   id: string;
@@ -20,14 +30,29 @@ export class User {
   email: string;
 
   @Column()
-  @Matches(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$/, {
-    message: '(!)invalid paassword',
-  })
   password: string;
+
+  @Column({ default: '' })
+  image: string;
+
+  @Column({
+    type: 'enum',
+    enum: GenderType,
+  })
+  gender: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @BeforeInsert()
+  async hashPassword(): Promise<void> {
+    try {
+      this.password = await bcrypt.hash(this.password, 5);
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
+  }
 }

@@ -7,9 +7,12 @@ export class AuthController {
   constructor(private authService: AuthService) {}
   @Post()
   isValidUser(@Req() req: Request, @Res() res: Response) {
-    const userToken = this.authService.getUserToken();
-    console.log({ userToken });
-    console.log(req.body);
-    return res.status(200).json({ result: true });
+    try {
+      const token = this.authService.getUserToken();
+      return res.status(200).json({ isError: false, token });
+    } catch (err) {
+      console.log({ err });
+      return Promise.reject(err);
+    }
   }
 }

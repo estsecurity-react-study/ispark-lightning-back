@@ -1,14 +1,23 @@
-import { Controller, Post, Req, Res } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
+import { CreateUserDto } from './dto';
+import { CreateUserValidatePipe } from './pipe/createUserValidate.pipe';
 import { UserService } from './user.service';
 
-@Controller('user')
+@Controller('')
 export class UserController {
   constructor(private userService: UserService) {}
   @Post('/signup')
-  userSignup(@Req() req: Request, @Res() res: Response) {
-    const userData = req.body;
-    const result = this.userService.signup(userData);
-    return res.json({ result });
+  async userSignup(
+    @Body(new CreateUserValidatePipe()) userData: CreateUserDto,
+    @Res() res: Response,
+  ) {
+    try {
+      const data = await this.userService.signup(userData);
+      return res.status(201).json({ isError: false, data });
+    } catch (err) {
+      console.log({ err }); // [log]
+      return Promise.reject(err);
+    }
   }
 }
