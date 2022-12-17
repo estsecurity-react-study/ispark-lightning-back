@@ -3,6 +3,7 @@ import { LoginUserDto } from '../dto';
 
 export class LoginUserValidatePipe implements PipeTransform {
   transform(value: LoginUserDto) {
+    console.log({ value });
     if (!value.email || !value.password) {
       throw new HttpException(
         'Bad Request ::: Invalid User Data',

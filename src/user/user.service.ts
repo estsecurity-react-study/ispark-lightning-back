@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 import { UserEntity } from 'src/db/entity/user.entity';
-import { Repository } from 'typeorm';
+import { Repository, UsingJoinColumnIsNotAllowedError } from 'typeorm';
 import { CreateUserDto } from './dto';
 import { LoginUserDto } from './dto/login-user.dto';
 
@@ -34,6 +34,7 @@ export class UserService {
   @UseGuards(LocalAuthGuard)
   async signin(user: LoginUserDto) {
     const { email, password } = user;
+    console.log({ email, password });
     try {
       const findResult = await this.userRepo.findOne({
         where: { email },
@@ -47,6 +48,7 @@ export class UserService {
 
   async _findUserByEmail(email: string): Promise<UserEntity> {
     try {
+      console.log('[UserService - _findUserByEmail] email: ', email);
       return await this.userRepo.findOne({ where: { email } });
     } catch (err) {
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);

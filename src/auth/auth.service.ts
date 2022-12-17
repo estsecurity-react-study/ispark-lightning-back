@@ -7,7 +7,7 @@ export class AuthService {
   constructor(private userService: UserService) {}
 
   async validate(email: string, password: string): Promise<any> {
-    console.log(email, password);
+    console.log('[AuthService] email, password => ', email, password);
     const user = await this.userService._findUserByEmail(email);
     if (!user)
       throw new HttpException('Invalid email', HttpStatus.UNAUTHORIZED);
@@ -15,6 +15,7 @@ export class AuthService {
     if (!isSamePw)
       throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
     const { password: _, ...result } = user;
+    console.log(result);
     return result;
   }
 }

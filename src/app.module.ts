@@ -10,6 +10,7 @@ import { RouterModule } from '@nestjs/core';
 import { UserModule } from './user/user.module';
 import setMysqlOption from './db/init';
 import { PassportModule } from '@nestjs/passport';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -26,13 +27,13 @@ import { PassportModule } from '@nestjs/passport';
     ]),
     AuthModule,
     UserModule,
-    PassportModule,
   ],
+
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(logger).forRoutes(UserController);
+    // consumer.apply(logger).forRoutes(UserController);
   }
 }
