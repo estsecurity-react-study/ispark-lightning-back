@@ -1,16 +1,26 @@
-import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
-
-import { LocalAuthGuard } from 'src/auth/local-auth.guard';
-import { LocalStrategy } from 'src/auth/local.strategy';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserDto, LoginUserDto } from './dto';
 import { CreateUserValidatePipe, LoginUserValidatePipe } from './pipe';
 import { UserService } from './user.service';
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private authService: AuthService,
+  ) {}
   @Post('/signup')
   async userSignup(
     @Body(new CreateUserValidatePipe()) userData: CreateUserDto,
@@ -32,8 +42,13 @@ export class UserController {
     @Res() res: Response,
   ) {
     console.log({ userData });
-    return res.status(200).json({ userData });
-    // const result = await this.userService.signin(userData);
-    // return res.status(200).json({ isError: false, result });
+    const token = await this.authService.generateToken(userData.email);
+    return res.status(200).json({ ...userData, token });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/profile')
+  async getProfile(@Request() req) {
+    return req.user;
   }
 }

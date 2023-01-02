@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { IsEmail } from 'class-validator';
+import { Exclude } from 'class-transformer';
 import { InternalServerErrorException } from '@nestjs/common';
 
 //* Biological gender
@@ -30,6 +31,7 @@ export class UserEntity {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column({ default: '' })

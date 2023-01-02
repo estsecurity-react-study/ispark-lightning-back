@@ -10,6 +10,7 @@ export class LoginUserValidatePipe implements PipeTransform {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return value;
+    const { password, ...userData } = value;
+    return userData;
   }
 }
