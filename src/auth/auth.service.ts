@@ -2,10 +2,12 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private configService: ConfigService,
     private userService: UserService,
     private jwtService: JwtService,
   ) {}
@@ -22,11 +24,13 @@ export class AuthService {
   }
 
   async generateToken(email: string) {
+    console.log({ email });
     const payload = { email };
+    const access_token = await this.jwtService.sign(payload, {
+      secret: this.configService.get('JWT_TOKEN'),
+    });
     return {
-      access_token: await this.jwtService.sign(payload, {
-        secret: process.env.HW_TOKEN,
-      }),
+      access_token: access_token,
     };
   }
 }
