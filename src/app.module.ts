@@ -19,8 +19,8 @@ MYSQL_DATABASE=test_auth
   imports: [
     // Config Modules
     ConfigModule.forRoot({
-      // isGlobal: true,
-      envFilePath: ['.env'],
+      isGlobal: true,
+      envFilePath: `${process.env.NODE_ENV}.env`,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

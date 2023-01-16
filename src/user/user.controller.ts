@@ -43,7 +43,10 @@ export class UserController {
   ) {
     console.log({ userData });
     const token = await this.authService.generateToken(userData.email);
-    return res.status(200).json({ ...userData, token });
+    return res
+      .status(200)
+      .cookie('token', token)
+      .json({ ...userData });
   }
 
   @UseGuards(JwtAuthGuard)
