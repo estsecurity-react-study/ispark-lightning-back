@@ -6,6 +6,8 @@ import { UserModule } from '../user/user.module';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
 import { LocalStrategy } from './local.strategy';
+import { AuthController } from './auth.controller';
+import { GoogleStrategy } from './googe-auth.strategy';
 
 @Module({
   imports: [
@@ -21,7 +23,9 @@ import { LocalStrategy } from './local.strategy';
       inject: [ConfigService],
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+
   exports: [AuthService],
+  controllers: [AuthController],
+  providers: [AuthService, LocalStrategy, JwtStrategy, GoogleStrategy],
 })
 export class AuthModule {}
