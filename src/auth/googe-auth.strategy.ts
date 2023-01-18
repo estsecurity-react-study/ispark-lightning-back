@@ -4,6 +4,20 @@ import { Profile, Strategy } from 'passport-google-oauth20';
 
 const grantSources = ['email', 'profile'];
 
+export interface GoogleOauthProfile {
+  provider?: string;
+  sub?: string;
+  name?: string;
+  given_name?: string;
+  family_name?: string;
+  picture?: string;
+  email?: string;
+  email_verified?: boolean;
+  locale?: string;
+  token?: string;
+  refreshToken?: string;
+}
+
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor() {
@@ -16,12 +30,24 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   }
 
   validate(token: string, refreshToken: string, profile: Profile) {
-    const { id, name, emails } = profile;
+    const profileData = '_json' in profile && profile._json && profile._json;
+    /**
+      _json: {
+        sub: '113733149526344154356',
+        name: '박인수',
+        given_name: '인수',
+        family_name: '박',
+        picture: 'https://lh3.googleusercontent.com/a/AEdFTp59kELVLPMzzordkrJsy-AJSob4CG-whuRmiqDC=s96-c',
+        email: 'lunatics384@gmail.com',
+        email_verified: true,
+        locale: 'ko'
+      }
+    **/
     return {
       provider: 'google',
-      id,
-      name,
-      emails,
+      ...profileData,
+      token,
+      refreshToken,
     };
   }
 }

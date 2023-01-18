@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { RouterModule } from '@nestjs/core';
 import { UserModule } from './user/user.module';
 import { UserEntity } from './db/entity/user.entity';
+import { AuthController } from './auth/auth.controller';
 
 @Module({
   imports: [
@@ -39,7 +40,7 @@ import { UserEntity } from './db/entity/user.entity';
     AuthModule,
     UserModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, AuthController],
   providers: [AppService],
 })
 export class AppModule implements NestModule {
