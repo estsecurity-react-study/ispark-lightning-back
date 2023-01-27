@@ -23,9 +23,9 @@ export class AuthService {
     return userData;
   }
 
-  async generateToken(email: string) {
-    console.log({ email });
-    const payload = { email };
+  async generateToken(payload: { [key: string]: any }) {
+    // console.log({ payload });
+    // const payload = { email };
     const access_token = await this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_TOKEN'),
     });

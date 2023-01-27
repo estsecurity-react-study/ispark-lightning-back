@@ -31,6 +31,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
 
   validate(token: string, refreshToken: string, profile: Profile) {
     const profileData = '_json' in profile && profile._json && profile._json;
+    console.log(profileData);
     /**
       _json: {
         sub: '113733149526344154356',
@@ -45,6 +46,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     **/
     return {
       provider: 'google',
+
       ...profileData,
       token,
       refreshToken,

@@ -22,6 +22,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const { password, ...userData } = await this.userService._findUserByEmail(
       payload.email,
     );
+
     return userData;
   }
 }

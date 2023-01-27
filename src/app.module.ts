@@ -8,6 +8,10 @@ import { RouterModule } from '@nestjs/core';
 import { UserModule } from './user/user.module';
 import { UserEntity } from './db/entity/user.entity';
 import { AuthController } from './auth/auth.controller';
+import { PostModule } from './post/post.module';
+import { PostEntity } from './db/entity/post.entity';
+import { CommentEntity } from './db/entity/comment.entity';
+import { PostImageEntity } from './db/entity/postImage.entity';
 
 @Module({
   imports: [
@@ -25,8 +29,8 @@ import { AuthController } from './auth/auth.controller';
         username: configService.get('MYSQL_USERNAME'),
         password: configService.get('MYSQL_PASSWORD'),
         database: configService.get('MYSQL_DATABASE'),
-        entities: [UserEntity],
-        synchronize: false,
+        entities: [UserEntity, PostEntity, PostImageEntity, CommentEntity],
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),
@@ -34,11 +38,12 @@ import { AuthController } from './auth/auth.controller';
     RouterModule.register([
       {
         path: 'api',
-        children: [UserModule],
+        children: [UserModule, PostModule],
       },
     ]),
     AuthModule,
     UserModule,
+    PostModule,
   ],
   controllers: [AppController, AuthController],
   providers: [AppService],
