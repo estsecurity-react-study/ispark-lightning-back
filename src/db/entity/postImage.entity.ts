@@ -18,10 +18,6 @@ export class PostImageEntity {
   id: string;
 
   @Column()
-  @ManyToOne((type) => PostEntity, (post) => post.id)
-  postId: string;
-
-  @Column()
   imagePath: string;
 
   @CreateDateColumn()
@@ -29,4 +25,7 @@ export class PostImageEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne((type) => PostEntity, (post) => post.postImages)
+  post: PostEntity;
 }

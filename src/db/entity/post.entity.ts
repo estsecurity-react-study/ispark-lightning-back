@@ -5,7 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryColumn,
+  OneToMany,
 } from 'typeorm';
+import { CommentEntity } from './comment.entity';
+import { PostImageEntity } from './postImage.entity';
 
 @Entity({
   name: 'post',
@@ -29,4 +32,10 @@ export class PostEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => PostImageEntity, (postImage) => postImage.post)
+  postImages: PostImageEntity[];
+
+  @OneToMany(() => CommentEntity, (comment) => comment.post)
+  comments: CommentEntity[];
 }

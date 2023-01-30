@@ -18,10 +18,6 @@ export class CommentEntity {
   id: string;
 
   @Column()
-  @ManyToOne((type) => PostEntity, (post) => post.id)
-  postId: string;
-
-  @Column()
   content: string;
 
   @CreateDateColumn()
@@ -29,4 +25,7 @@ export class CommentEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @ManyToOne((type) => PostEntity, (post) => post.comments)
+  post: PostEntity;
 }

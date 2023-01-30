@@ -18,13 +18,13 @@ export class PostController {
 
   @Get('/')
   async getPostList(@Query() queries, @Res() res: Response) {
-    console.log(queries);
     return res.json({ result: true });
   }
 
   @Get('/:id')
   async getPost(@Param() params, @Res() res: Response) {
     const { id } = params;
+    console.log({ id });
     return res.json({ result: true });
   }
 
