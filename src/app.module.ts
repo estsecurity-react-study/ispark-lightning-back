@@ -12,6 +12,8 @@ import { PostModule } from './post/post.module';
 import { PostEntity } from './db/entity/post.entity';
 import { CommentEntity } from './db/entity/comment.entity';
 import { PostImageEntity } from './db/entity/postImage.entity';
+import logger from './middleware/logger.middleware';
+import { UserController } from './user/user.controller';
 
 @Module({
   imports: [
@@ -38,7 +40,7 @@ import { PostImageEntity } from './db/entity/postImage.entity';
     RouterModule.register([
       {
         path: 'api',
-        children: [UserModule, PostModule],
+        children: [UserModule, AuthModule, PostModule],
       },
     ]),
     AuthModule,
@@ -50,6 +52,6 @@ import { PostImageEntity } from './db/entity/postImage.entity';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    // consumer.apply(logger).forRoutes(UserController);
+    consumer.apply(logger).forRoutes(UserController, AuthController);
   }
 }

@@ -1,30 +1,52 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { CommentEntity } from 'src/db/entity/comment.entity';
+// import { CommentEntity } from 'src/db/entity/comment.entity';
 import { PostEntity } from 'src/db/entity/post.entity';
 import { PostImageEntity } from 'src/db/entity/postImage.entity';
-import { Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { CreatePostDto } from './dto/create-post';
-
+const IS_DEBUG = true;
 @Injectable()
 export class PostService {
-  constructor(
-    @InjectRepository(PostEntity) private postRepo: Repository<PostEntity>,
-    @InjectRepository(PostImageEntity)
-    private postImageRepo: Repository<PostImageEntity>,
-    @InjectRepository(CommentEntity)
-    private commentRepo: Repository<CommentEntity>,
-  ) {}
+  constructor(private dataSource: DataSource) {}
 
-  async createPost(post: CreatePostDto): Promise<PostEntity> {
+  async createPost({
+    owner,
+    content,
+    title,
+    imageUrlList,
+  }: CreatePostDto): Promise<PostEntity> {
+    const qr = this.dataSource.createQueryRunner();
+    await qr.connect();
+    await qr.startTransaction();
+
     try {
-      const {} = post;
-      const postData = await this.postRepo.create(post);
-      const saveResult = await this.postRepo.save(postData);
-      return {} as any;
+      const postData = new PostEntity();
+      postData.owner = owner;
+      postData.content = content;
+      postData.title = title;
+      IS_DEBUG && console.log({ postData });
+      const postResultData = await qr.manager.save(postData);
+      // await qr.commitTransaction();
+      // console.log()
+      if (imageUrlList && Array.isArray(imageUrlList)) {
+        for (const imageUrl of imageUrlList) {
+          IS_DEBUG && console.log({ imageUrl });
+          const postImageData = new PostImageEntity();
+          postImageData.imagePath = imageUrl;
+          postImageData.post = postResultData;
+          await qr.manager.save(postImageData);
+        }
+      }
+
+      // await qr.rollbackTransaction();
+      await qr.commitTransaction();
+      return postData;
     } catch (err) {
       console.log({ err });
+      await qr.rollbackTransaction();
+      // reject
+    } finally {
+      await qr.release();
     }
   }
-  async getPost(postId: string): Promise<any> {}
 }

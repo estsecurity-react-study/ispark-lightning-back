@@ -26,6 +26,6 @@ export class PostImageEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne((type) => PostEntity, (post) => post.postImages)
+  @ManyToOne(() => PostEntity, (post) => post.postImages)
   post: PostEntity;
 }

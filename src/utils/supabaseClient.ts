@@ -8,16 +8,19 @@ export class Supabase {
   private client: SupabaseClient;
   constructor(private readonly configService: ConfigService) {}
 
-  getClient() {
-    console.log(this.configService.get('SUPABASE_URL'));
+  async getClient() {
+    console.log('SUPABASE_URL => ', this.configService.get('SUPABASE_URL'));
     if (this.client) {
       console.log('Already assigned Supbase-client...');
       return this.client;
     }
-    this.client = createClient(
+    this.client = await createClient(
       this.configService.get('SUPABASE_URL'),
       this.configService.get('SUPABASE_KEY'),
     );
+    console.log(this.client);
+    const admin = await this.client.auth.getUser();
+    console.log(admin);
     return this.client;
   }
 }

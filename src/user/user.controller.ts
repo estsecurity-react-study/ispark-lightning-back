@@ -1,9 +1,17 @@
-import { Controller, Get, Request, UseGuards } from '@nestjs/common';
-// import { AuthGuard } from '@nestjs/passport';
-// import { Response } from 'express';
+import {
+  Controller,
+  Get,
+  Request,
+  UseGuards,
+  Post,
+  Body,
+  Res,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-// import { CreateUserDto, LoginUserDto } from './dto';
-// import { CreateUserValidatePipe, LoginUserValidatePipe } from './pipe';
+import { CreateUserDto, LoginUserDto } from './dto';
+import { CreateUserValidatePipe, LoginUserValidatePipe } from './pipe';
 import { UserService } from './user.service';
 import { AuthService } from 'src/auth/auth.service';
 
@@ -28,19 +36,19 @@ export class UserController {
   //   }
   // }
 
-  // @UseGuards(AuthGuard('local'))
-  // @Post('/signin')
-  // async userSignin(
-  //   @Body(new LoginUserValidatePipe()) userData: LoginUserDto,
-  //   @Res() res: Response,
-  // ) {
-  //   console.log({ userData });
-  //   const token = await this.authService.generateToken(userData.email);
-  //   return res
-  //     .status(200)
-  //     .cookie('token', token)
-  //     .json({ ...userData });
-  // }
+  @UseGuards(AuthGuard('local'))
+  @Post('/signin')
+  async userSignin(
+    @Body(new LoginUserValidatePipe()) userData: LoginUserDto,
+    @Res() res: Response,
+  ) {
+    console.log({ userData });
+    // const token = await this.authService.generateToken(userData.email);
+    return res
+      .status(200)
+      .cookie('token', 'asd')
+      .json({ ...userData });
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get('/profile')

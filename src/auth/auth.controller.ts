@@ -15,15 +15,16 @@ export class AuthController {
 
   @UseGuards(GoogleAuthGuard)
   @Get('/google')
-  async googleAuth(): Promise<void> {}
+  async googleAuth(): Promise<any> {}
 
   @Get('/google/callback')
-  @UseGuards(AuthGuard('google'))
+  @UseGuards(GoogleAuthGuard)
   async googleAuthCallback(@Req() req: Request, @Res() res: Response) {
-    const { token }: GoogleOauthProfile = req.user;
-    //* Generate Custom Token and pass.
-    res.cookie('access_token', token, { httpOnly: true });
-    res.redirect('http://localhost:3000');
+    console.log(req.user);
+    const redirectUri = req.user['redirectUri'] || 'http://localhost:3000';
+    const { token }: GoogleOauthProfile = req.user; //* TODO ::: 커스텀 토큰.
+    res.cookie('access_token', token, { httpOnly: true, secure: true });
+    res.redirect(redirectUri);
   }
 
   @UseGuards(KakaoAuthGuard)

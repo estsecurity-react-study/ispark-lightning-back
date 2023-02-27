@@ -11,4 +11,6 @@ export class CreatePostDto {
   @IsNotEmpty()
   @IsString()
   readonly content: string;
+
+  readonly imageUrlList: Array<string>;
 }

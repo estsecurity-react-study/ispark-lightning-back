@@ -4,10 +4,11 @@
   "description": "",
   "author": "",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
+    "build-test-kube": "./local-test-kube.dockerizing.sh",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "cross-env NODE_ENV=local nest start --watch",
@@ -29,6 +30,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/typeorm": "^9.0.1",
     "@supabase/supabase-js": "^2.5.0",
+    "aws-sdk": "^2.1323.0",
     "axios": "^1.2.4",
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.5.1",
@@ -44,7 +46,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.3.10"
+    "typeorm": "^0.3.10",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
@@ -55,6 +58,7 @@
     "@types/jest": "28.1.8",
     "@types/multer": "^1.4.7",
     "@types/node": "^16.0.0",
+    "@types/passport": "^1.0.12",
     "@types/passport-google-oauth20": "^2.0.11",
     "@types/passport-jwt": "^3.0.8",
     "@types/passport-kakao": "^1.0.0",

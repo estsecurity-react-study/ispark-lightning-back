@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nest-kube-test-app
+  labels:
+    app: nest-kube-test-app
+  namespace: nextkube
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nest-kube-test-app
+  template:
+    metadata:
+      labels:
+        app: nest-kube-test-app
+    spec:
+      containers:
+        - image: nestkubetestapp
+          name: nestkubetestapp
+          imagePullPolicy: Never # local image 땡겨오기
+          ports:
+            - containerPort: 3050

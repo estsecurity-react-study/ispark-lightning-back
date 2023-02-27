@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nest-kube-test-service
+  labels:
+    app: nest-kube-test-service
+  namespace: nextkube
+spec:
+  # externalIp 제공을 위해서는 minikube tunnel 프로세스가 떠 있어야함
+  # => local로 자동 할당
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 3055 # LoadBalancer에 붙일 port(External)
+      targetPort: 3050 # pod 어플 port(Internal)
+      name: http
+  selector:
+    app: nest-kube-test-app
